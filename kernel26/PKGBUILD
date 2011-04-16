@@ -2,7 +2,7 @@
 
 pkgbase=kernel26
 pkgname=('kernel26' 'kernel26-headers' 'kernel26-docs')
-_kernelname=${pkgname#kernel26}
+_kernelname=${pkgname}
 pkgver=2.6.38.3
 pkgrel=1
 _commit=b8d59a7
