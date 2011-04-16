@@ -1,5 +1,4 @@
-Will finish it soon Nothing you can see here
+# README #
+Core PKGBUILD for Terralinux
 
-Switch to Your build branch
-i686 / x86_64
-
+Use it with care :)
