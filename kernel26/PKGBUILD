@@ -1,11 +1,11 @@
-# Maintainer: Martin Lee < hellnest@terralinux.org >
+# Maintainer: Martin Lee <hellnest@terralinux.org>
 
 pkgbase=kernel26
 pkgname=('kernel26' 'kernel26-headers' 'kernel26-docs')
-_kernelname=${pkgname}
-pkgver=2.6.38.3
-pkgrel=1
-_commit=b8d59a7
+_kernelname=${pkgname#kernel26}
+pkgver=2.6.38.4
+pkgrel=4
+_commit=a88054a
 makedepends=('xmlto' 'docbook-xsl')
 arch=(i686 x86_64)
 license=('GPL2')
@@ -13,16 +13,47 @@ url="http://www.kernel.org"
 options=(!strip)
 _srcname=zen-stable-$_commit
 source=(http://git.zen-kernel.org/zen-stable/snapshot/$_srcname.tar.bz2
-	      logo_linux_clut224.ppm.bz2 # Terralinux Logo
+        # the main kernel config files
+	      logo_linux_clut224.ppm # Terralinux Logo
         config config.x86_64 config.diff config.x86_64.diff
-        kernel26.preset)
+        # standard config files for mkinitcpio ramdisk
+        kernel26.preset
+        #zen-tune.patch
+        fix-hibernate-resume-2.6.38.patch
+        acpi-CLEVO-M360S-disable_acpi_irq.patch
+        net-usb-rndis_host-poll-status-channel-before-control-channel.patch
+        ide-pci-sis5513-965.patch
+        acpi-video-add-blacklist-to-use-vendor-driver.patch
+        char-agp-intel-new-Q57-id.patch
+        sound-alsa-hda-ad1884a-hp-dc-model.patch
+        sound-alsa-hda_intel-prealloc-4mb-dmabuffer.patch
+        x86-p4_clockmod-reasonable-default-for-scaling_min_freq.patch
+        x86-cpufreq-speedstep-dothan-3.patch
+        x86-default_poweroff_up_machines.patch
+        x86-boot-video-80x25-if-break.patch)
 
 build() {
+  msg "Applying Patchest"
   cd "$srcdir/$_srcname"
+  patch -Np1 -i $srcdir/net-usb-rndis_host-poll-status-channel-before-control-channel.patch
+  patch -Np1 -i $srcdir/acpi-CLEVO-M360S-disable_acpi_irq.patch
+  patch -Np1 -i $srcdir/fix-hibernate-resume-2.6.38.patch
+  patch -Np1 -i $srcdir/ide-pci-sis5513-965.patch
+  patch -Np1 -i $srcdir/acpi-video-add-blacklist-to-use-vendor-driver.patch
+  patch -Np1 -i $srcdir/char-agp-intel-new-Q57-id.patch
+  patch -Np1 -i $srcdir/sound-alsa-hda-ad1884a-hp-dc-model.patch
+  patch -Np1 -i $srcdir/sound-alsa-hda_intel-prealloc-4mb-dmabuffer.patch
+  patch -Np1 -i $srcdir/x86-p4_clockmod-reasonable-default-for-scaling_min_freq.patch
+  patch -Np1 -i $srcdir/x86-cpufreq-speedstep-dothan-3.patch
+  patch -Np1 -i $srcdir/x86-default_poweroff_up_machines.patch
+  patch -Np1 -i $srcdir/x86-boot-video-80x25-if-break.patch
+
   if [[ $NOEXTRACT = "0" ]]; then
      msg "Replacing penguins with Terra"
-     bzip2 -dk ${startdir}/logo_linux_*.bz2
-     mv -f ${startdir}/logo_linux_*.p?m drivers/video/logo/
+     #bzip2 -dk ${startdir}/logo_linux_clut224.ppm.bz2
+     #tar -xf $srcdir/logo_linux_*.bz2
+     #mv -f ${startdir}/logo_linux_*.p?m drivers/video/logo/
+     mv -f ${srcdir}/logo_linux_*.p?m drivers/video/logo/
   fi
   if [ "$CARCH" = "x86_64" ]; then
     cat  ../config.x86_64 >./.config
@@ -36,16 +67,16 @@ build() {
     sed -i "s|CONFIG_LOCALVERSION_AUTO=.*|CONFIG_LOCALVERSION=n|" ./.config
   fi
   sed -i 's|EXTRAVERSION =.*|EXTRAVERSION =|' Makefile
-  # get kernel version  
+  # get kernel version
   make prepare
   # load configuration
   # Configure the kernel. Replace the line below with one of your choice.
-  #make menuconfig # CLI menu for configuration
+  make menuconfig # CLI menu for configuration
   #make nconfig # new CLI menu for configuration
   #make xconfig # X-based configuration
   #make oldconfig # using old config from previous kernel version
   # ... or manually edit .config
-  
+
   # rewrite configuration
   yes "" | make config >/dev/null
 
@@ -66,7 +97,7 @@ build() {
   make ${MAKEFLAGS} LOCALVERSION= bzImage modules
 }
 package_kernel26() {
-  pkgdesc="The Linux ZEN Kernel and modules"
+  pkgdesc="Terralinux Kernel based on Zen Kernel"
   backup=(etc/mkinitcpio.d/${pkgname}.preset)
   depends=('coreutils' 'linux-firmware' 'module-init-tools>=3.12-2' 'mkinitcpio>=0.6.8-2')
   # pwc, ieee80211 and hostap-driver26 modules are included in kernel26 now
@@ -112,7 +143,7 @@ package_kernel26() {
 }
 
 package_kernel26-headers() {
-  pkgdesc="Header files and scripts for building modules for kernel26-zen"
+  pkgdesc="Header files and scripts for building modules for kernel26"
   mkdir -p ${pkgdir}/lib/modules/${_kernver}
   cd ${pkgdir}/lib/modules/${_kernver}
   ln -sf ../../../usr/src/linux-${_kernver} build
@@ -185,7 +216,7 @@ package_kernel26-headers() {
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/dvb/frontends/
   cp drivers/media/dvb/frontends/lgdt330x.h ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/dvb/frontends/
   cp drivers/media/video/msp3400-driver.h ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/dvb/frontends/
-  # add dvb headers  
+  # add dvb headers
   # in reference to:
   # http://bugs.archlinux.org/task/20402
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/dvb/dvb-usb
@@ -211,7 +242,7 @@ package_kernel26-headers() {
   # http://bugs.archlinux.org/task/22081
   cp -a include/crypto $pkgdir/usr/src/linux-${_kernver}/include/
   # copy in Kconfig files
-  for i in `find . -name "Kconfig*"`; do 
+  for i in `find . -name "Kconfig*"`; do
     mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/`echo $i | sed 's|/Kconfig.*||'`
     cp $i ${pkgdir}/usr/src/linux-${_kernver}/$i
   done
@@ -227,14 +258,14 @@ package_kernel26-headers() {
     /usr/bin/strip $STRIP_STATIC "$binary";;
     *application/x-executable*) # Binaries
     /usr/bin/strip $STRIP_BINARIES "$binary";;
-    esac 
-  done 
+    esac
+  done
   # remove unneeded architectures
   rm -rf ${pkgdir}/usr/src/linux-${_kernver}/arch/{alpha,arm,arm26,avr32,blackfin,cris,frv,h8300,ia64,m32r,m68k,m68knommu,mips,microblaze,mn10300,parisc,powerpc,ppc,s390,sh,sh64,sparc,sparc64,um,v850,xtensa}
 }
 
 package_kernel26-docs() {
-pkgdesc="Kernel hackers manual - HTML documentation that comes with the Linux ZEN kernel."
+pkgdesc="Kernel hackers manual"
 
 cd ${srcdir}/$_srcname
 mkdir -p $pkgdir/usr/src/linux-$_kernver
@@ -244,10 +275,82 @@ find $pkgdir -type d -exec chmod 755 {} \;
 # remove a file already in kernel26 package
 rm -f $pkgdir/usr/src/linux-$_kernver/Documentation/DocBook/Makefile
 }
-sha256sums=('26e75c84190c545caf2fa8e2a024fb3d6db446af4786d2d413820ef260cb55ae'
+sha256sums=('b521b42c1e7673837e17444ff228df5ca13de91a9dc92e3a838245e22805d3be'
             'c6c8ad64c9a0474354e556d558d49ed1c05fbab9fa8fbe76979863b8eaabbedc'
             '688194c5c473a13fcba0aec56ab399631ad5a7f9c552eafb0b3325194c25daa8'
             '3aa2d30dcfc12798c65780d13ec885b17c49ce9ef5b90a74a234a0be71e9baa5'
-            '31c4507b644793a07cec510fc55dc2928cf78bbbd91e3995961358d6db21fff1'
+            '2e917c095c267a5da45c1c699609702c2ab9b77d10dfa51e80b68083106d440c'
             '1311bf152f067eb62b03bec7b8325cff1020e625bb9630b4725570555b117fe4'
-            'fbd311a1cbb401dab047cfb6845a9d298367055ce9c47498df73592978e3927f')
+            'fbd311a1cbb401dab047cfb6845a9d298367055ce9c47498df73592978e3927f'
+            'f97f402c244cfa2197496cbd7a02da79a0712fc531ae97a305d40f459963ead2'
+            'ea48d6d9fa929c69494fb913e51c1c1ef51cfdd385eb4bc28ce43d008d53916c'
+            'f776c2c7465f77c6fb5d267e27c176464604de46b759b9a8a74e8b67e4043b1c'
+            'dbc02578a7a8e77a55b9fdd8bcfb8f95aebb2e94dcfa1e5a8d41ddf0fc273fa3'
+            'e8fa82a7b8bb58d36b587705343758d83a569a38aec9c14d36e374240623aa91'
+            '9dda3d777eb149637d8a7f415fc33dce54377a6d0293ad031b257fb06e2d981f'
+            '013d5db1b9cacf1e724ecf4094e7484f9032e4c0e0bcb0b65eb0ac2fd49b663b'
+            'b81a77512b350a0e4660ef0cf4a625fd42e974e883067c6681dc3f4320ac2ec7'
+            '4ffbade2827af61cc6f0b0f384df63d810bc06b7c5bc97720c38ffdd21c16d66'
+            '9958881ca860bef44320b26322aa17e31abfd5145e815223ecfa703e3550c346'
+            '459f656cc7e1e45684d9f0f122d21c6cb68901dcdcbe1ab3b8124108244e2a80'
+            '89b0cfef95ca2b5b29cab57a2fad3f2ed36adcfe610280f5c1078b5911946125')
+
+sha256sums=('b521b42c1e7673837e17444ff228df5ca13de91a9dc92e3a838245e22805d3be'
+            '707c7edc8ee9ac8f832558b526863fba9b0c98413c5af55fac303460a8c6dad2'
+            '688194c5c473a13fcba0aec56ab399631ad5a7f9c552eafb0b3325194c25daa8'
+            '3aa2d30dcfc12798c65780d13ec885b17c49ce9ef5b90a74a234a0be71e9baa5'
+            '2e917c095c267a5da45c1c699609702c2ab9b77d10dfa51e80b68083106d440c'
+            '1311bf152f067eb62b03bec7b8325cff1020e625bb9630b4725570555b117fe4'
+            'fbd311a1cbb401dab047cfb6845a9d298367055ce9c47498df73592978e3927f'
+            'f97f402c244cfa2197496cbd7a02da79a0712fc531ae97a305d40f459963ead2'
+            'ea48d6d9fa929c69494fb913e51c1c1ef51cfdd385eb4bc28ce43d008d53916c'
+            'f776c2c7465f77c6fb5d267e27c176464604de46b759b9a8a74e8b67e4043b1c'
+            'dbc02578a7a8e77a55b9fdd8bcfb8f95aebb2e94dcfa1e5a8d41ddf0fc273fa3'
+            'e8fa82a7b8bb58d36b587705343758d83a569a38aec9c14d36e374240623aa91'
+            '9dda3d777eb149637d8a7f415fc33dce54377a6d0293ad031b257fb06e2d981f'
+            '013d5db1b9cacf1e724ecf4094e7484f9032e4c0e0bcb0b65eb0ac2fd49b663b'
+            'b81a77512b350a0e4660ef0cf4a625fd42e974e883067c6681dc3f4320ac2ec7'
+            '4ffbade2827af61cc6f0b0f384df63d810bc06b7c5bc97720c38ffdd21c16d66'
+            '9958881ca860bef44320b26322aa17e31abfd5145e815223ecfa703e3550c346'
+            '459f656cc7e1e45684d9f0f122d21c6cb68901dcdcbe1ab3b8124108244e2a80'
+            '89b0cfef95ca2b5b29cab57a2fad3f2ed36adcfe610280f5c1078b5911946125')
+
+sha256sums=('b521b42c1e7673837e17444ff228df5ca13de91a9dc92e3a838245e22805d3be'
+            '707c7edc8ee9ac8f832558b526863fba9b0c98413c5af55fac303460a8c6dad2'
+            '688194c5c473a13fcba0aec56ab399631ad5a7f9c552eafb0b3325194c25daa8'
+            '3aa2d30dcfc12798c65780d13ec885b17c49ce9ef5b90a74a234a0be71e9baa5'
+            '2e917c095c267a5da45c1c699609702c2ab9b77d10dfa51e80b68083106d440c'
+            '1311bf152f067eb62b03bec7b8325cff1020e625bb9630b4725570555b117fe4'
+            'fbd311a1cbb401dab047cfb6845a9d298367055ce9c47498df73592978e3927f'
+            'f97f402c244cfa2197496cbd7a02da79a0712fc531ae97a305d40f459963ead2'
+            'ea48d6d9fa929c69494fb913e51c1c1ef51cfdd385eb4bc28ce43d008d53916c'
+            'f776c2c7465f77c6fb5d267e27c176464604de46b759b9a8a74e8b67e4043b1c'
+            'dbc02578a7a8e77a55b9fdd8bcfb8f95aebb2e94dcfa1e5a8d41ddf0fc273fa3'
+            'e8fa82a7b8bb58d36b587705343758d83a569a38aec9c14d36e374240623aa91'
+            '9dda3d777eb149637d8a7f415fc33dce54377a6d0293ad031b257fb06e2d981f'
+            '013d5db1b9cacf1e724ecf4094e7484f9032e4c0e0bcb0b65eb0ac2fd49b663b'
+            'b81a77512b350a0e4660ef0cf4a625fd42e974e883067c6681dc3f4320ac2ec7'
+            '4ffbade2827af61cc6f0b0f384df63d810bc06b7c5bc97720c38ffdd21c16d66'
+            '9958881ca860bef44320b26322aa17e31abfd5145e815223ecfa703e3550c346'
+            '459f656cc7e1e45684d9f0f122d21c6cb68901dcdcbe1ab3b8124108244e2a80'
+            '89b0cfef95ca2b5b29cab57a2fad3f2ed36adcfe610280f5c1078b5911946125'
+            'd9a83a44c52e75f5863e3c16b9d2e7ccf261eaa6f95815424fff7fa3a5c9c772')
+sha256sums=('b521b42c1e7673837e17444ff228df5ca13de91a9dc92e3a838245e22805d3be'
+            '707c7edc8ee9ac8f832558b526863fba9b0c98413c5af55fac303460a8c6dad2'
+            '688194c5c473a13fcba0aec56ab399631ad5a7f9c552eafb0b3325194c25daa8'
+            '3aa2d30dcfc12798c65780d13ec885b17c49ce9ef5b90a74a234a0be71e9baa5'
+            '2e917c095c267a5da45c1c699609702c2ab9b77d10dfa51e80b68083106d440c'
+            '1311bf152f067eb62b03bec7b8325cff1020e625bb9630b4725570555b117fe4'
+            'fbd311a1cbb401dab047cfb6845a9d298367055ce9c47498df73592978e3927f'
+            'f97f402c244cfa2197496cbd7a02da79a0712fc531ae97a305d40f459963ead2'
+            'ea48d6d9fa929c69494fb913e51c1c1ef51cfdd385eb4bc28ce43d008d53916c'
+            'f776c2c7465f77c6fb5d267e27c176464604de46b759b9a8a74e8b67e4043b1c'
+            'dbc02578a7a8e77a55b9fdd8bcfb8f95aebb2e94dcfa1e5a8d41ddf0fc273fa3'
+            'e8fa82a7b8bb58d36b587705343758d83a569a38aec9c14d36e374240623aa91'
+            '9dda3d777eb149637d8a7f415fc33dce54377a6d0293ad031b257fb06e2d981f'
+            '013d5db1b9cacf1e724ecf4094e7484f9032e4c0e0bcb0b65eb0ac2fd49b663b'
+            'b81a77512b350a0e4660ef0cf4a625fd42e974e883067c6681dc3f4320ac2ec7'
+            '4ffbade2827af61cc6f0b0f384df63d810bc06b7c5bc97720c38ffdd21c16d66'
+            '9958881ca860bef44320b26322aa17e31abfd5145e815223ecfa703e3550c346'
+            '459f656cc7e1e45684d9f0f122d21c6cb68901dcdcbe1ab3b8124108244e2a80'
+            '89b0cfef95ca2b5b29cab57a2fad3f2ed36adcfe610280f5c1078b5911946125')
