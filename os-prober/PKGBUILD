@@ -1,7 +1,7 @@
 # Maintainer: Martin Lee <hellnest@terralinux.org>
 
 pkgname=os-prober
-pkgver=1.44
+pkgver=1.46
 pkgrel=1
 pkgdesc="Utility to detect other OSes on a set of drives"
 url="http://joey.kitenet.net/code/os-prober/"
@@ -12,7 +12,6 @@ optdepends=()
 makedepends=('gcc' 'sed')
 install=
 source=(ftp://ftp.us.debian.org/debian/pool/main/o/${pkgname}/${pkgname}_${pkgver}.tar.gz)
-sha512sums=('ae947973c413cc0c6d885b4c58eacb8259255b68e5f6a3a6e783dfec059157afd586b9967aba78d4aee1658877e251598165cb66fe29a02b66f5b34d9a0b2eae')
 
 build() {
   cd $srcdir/${pkgname}-${pkgver}
@@ -47,3 +46,4 @@ build() {
   touch $pkgdir/var/lib/os-prober/labels 
   chmod 644 $pkgdir/var/lib/os-prober/labels
 }
+sha256sums=('c73b7790c3b54bca664dde3aa49412c3fb244c7d9478cfa8316144ceb4c4e0a1')

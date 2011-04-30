@@ -1,0 +1,64 @@
+From: Ben Hutchings <ben@decadent.org.uk>
+Date: Tue, 20 Apr 2010 00:08:28 +0100
+Subject: [PATCH] rndis_host: Poll status channel before control channel
+
+Some RNDIS devices don't respond on the control channel until polled
+on the status channel.  In particular, this was reported to be the
+case for the 2Wire HomePortal 1000SW.
+
+This is roughly based on a patch by John Carr <john.carr@unrouted.co.uk>
+which is reported to be needed for use with some Windows Mobile devices
+and which is currently applied by Mandriva.
+
+Reported-by: Mark Glassberg <vzeeaxwl@myfairpoint.net>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Tested-by: Mark Glassberg <vzeeaxwl@myfairpoint.net>
+---
+Note that this change hasn't yet been tested with any other RNDIS
+devices.  John, can you confirm whether this also handles the WinMob
+devices?
+
+Ben.
+
+ drivers/net/usb/rndis_host.c |   18 ++++++++++++------
+ 1 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/usb/rndis_host.c b/drivers/net/usb/rndis_host.c
+index f56dec6..52faca1 100644
+--- a/drivers/net/usb/rndis_host.c
++++ b/drivers/net/usb/rndis_host.c
+@@ -103,8 +103,10 @@ static void rndis_msg_indicate(struct usbnet *dev, struct rndis_indicate *msg,
+ int rndis_command(struct usbnet *dev, struct rndis_msg_hdr *buf, int buflen)
+ {
+ 	struct cdc_state	*info = (void *) &dev->data;
++	struct usb_cdc_notification notification;
+ 	int			master_ifnum;
+ 	int			retval;
++	int			partial;
+ 	unsigned		count;
+ 	__le32			rsp;
+ 	u32			xid = 0, msg_len, request_id;
+@@ -132,13 +134,17 @@ int rndis_command(struct usbnet *dev, struct rndis_msg_hdr *buf, int buflen)
+ 	if (unlikely(retval < 0 || xid == 0))
+ 		return retval;
+ 
+-	// FIXME Seems like some devices discard responses when
+-	// we time out and cancel our "get response" requests...
+-	// so, this is fragile.  Probably need to poll for status.
++	/* Some devices don't respond on the control channel until
++	 * polled on the status channel, so do that first. */
++	retval = usb_interrupt_msg(
++		dev->udev,
++		usb_rcvintpipe(dev->udev, dev->status->desc.bEndpointAddress),
++		&notification, sizeof(notification), &partial,
++		RNDIS_CONTROL_TIMEOUT_MS);
++	if (unlikely(retval < 0))
++		return retval;
+ 
+-	/* ignore status endpoint, just poll the control channel;
+-	 * the request probably completed immediately
+-	 */
++	/* Poll the control channel; the request probably completed immediately */
+ 	rsp = buf->msg_type | RNDIS_MSG_COMPLETION;
+ 	for (count = 0; count < 10; count++) {
+ 		memset(buf, 0, CONTROL_BUFFER_SIZE);
