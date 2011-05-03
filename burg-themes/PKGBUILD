@@ -1,0 +1,33 @@
+# Maintainer: Martin Lee <hellnest@terralinux.org>
+
+pkgname=burg-themes
+pkgver=20100623
+pkgrel=1
+pkgdesc="Themes for Burg Bootloader"
+arch=('any')
+url="https://launchpad.net/burg"
+license=('GPL')
+depends=('zip' 'unzip' 'burg')
+provides=(burg-themes)
+backup=('boot/burg/gui.cfg' 'boot/burg/burgenv' )
+source=(  http://burg.googlecode.com/files/burg-theme-$pkgver.zip 
+        terra-class.patch
+        large_terra.png
+        grey_terra.png
+        small_terra.png)
+	
+install='burg-themes.install'
+
+package() {
+  mkdir -p $pkgdir/boot/burg 
+  unzip burg-theme-$pkgver.zip -d $pkgdir/boot/burg
+
+  msg "Apply terra patch"
+  patch -Np1 -i $srcdir/terra-class.patch || return 1
+  cp $srcdir/*.png $pkgdir/boot/burg/themes/icons/
+}
+md5sums=('dffc236d8766e575982b9310d9d02ee1'
+         '60c7e406f19395f63c4323d5f2f17b6b'
+         'f06d6154ee7dc00b9dcd1f9ba65b7d3e'
+         '2d467e4f7a0ed19f1a0ea93743f39416'
+         '2f302ba6a55ef9c532d079a0ac0b524a')
