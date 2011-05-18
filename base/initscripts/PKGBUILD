@@ -1,0 +1,28 @@
+# $Id: Terralnux initscripts - martin $
+# Maintainer: Martin Lee <hellnest@terralinux.org>
+
+pkgname=initscripts
+pkgver=2011.05
+pkgrel=1
+pkgdesc="System initialization/bootup scripts"
+arch=('i686' 'x86_64')
+url="http://www.terralinux.org"
+license=('GPL2')
+groups=('base')
+backup=(etc/inittab etc/rc.conf etc/rc.local etc/rc.local.shutdown etc/conf.d/wireless)
+depends=('bash' 'grep' 'coreutils' 'udev>=167'
+         'net-tools' 'ncurses' 'kbd' 'findutils' 'sysvinit')
+optdepends=('bridge-utils: Network bridging support'
+            'dhcpcd: DHCP network configuration'
+            'wireless_tools: Wireless networking')
+install=initscripts.install
+source=("http://archive.terralinux.org/other/${pkgname}-${pkgver}.tar.xz"
+        'wireless.conf.d')
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  install -D -m644 ${srcdir}/wireless.conf.d ${pkgdir}/etc/conf.d/wireless
+}
+md5sums=('f86238ab91d8ca1c8593e83196c4629d'
+         '027576534885b8d5dded9be546057b12')
