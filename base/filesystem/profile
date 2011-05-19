@@ -3,9 +3,15 @@
 #Set our umask
 umask 022
 
-# Set our default path
-PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+# Set default path, 
+if [ "$EUID" = "0" ] || [ "$USER" = "root" ] ; then
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${ROOTPATH}"
+else
+PATH="/usr/local/bin:/usr/bin:/bin:${PATH}"
+fi
+
 export PATH
+unset ROOTPATH
 
 # Load profiles from /etc/profile.d
 if test -d /etc/profile.d/; then

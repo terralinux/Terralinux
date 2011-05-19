@@ -66,7 +66,9 @@ package() {
   install -m644 ${srcdir}/dot.bashrc ${pkgdir}/etc/skel/.bashrc
   install -m644 ${srcdir}/dot.bash_profile ${pkgdir}/etc/skel/.bash_profile
   install -m644 ${srcdir}/dot.bash_logout ${pkgdir}/etc/skel/.bash_logout
-}md5sums=('3fb927c7c33022f1c327f14a81c0d4b0'
+}
+
+md5sums=('3fb927c7c33022f1c327f14a81c0d4b0'
          '94f2f5628e82f16347a466bee1f97bfa'
          '2902e0fee7a9168f3a4fd2ccd60ff047'
          '42f4400ed2314bd7519c020d0187edc5'
