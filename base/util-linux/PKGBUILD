@@ -26,7 +26,7 @@ build() {
   patch -Np1 -i ../mount-segfault-2.19.1.patch
   # hardware clock
   sed -e 's%etc/adjtime%var/lib/hwclock/adjtime%' -i hwclock/hwclock.c
-  ./configure 
+  ./configure \
     --enable-arch \
     --enable-write \
     --enable-raw \
