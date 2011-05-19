@@ -2,7 +2,7 @@
 # Maintainer: Martin Lee <hellnest@terralinux.org>
 
 pkgname=os-prober
-pkgver=1.46
+pkgver=1.47
 pkgrel=1
 pkgdesc="Utility to detect other OSes on a set of drives"
 url="http://joey.kitenet.net/code/os-prober/"
@@ -48,4 +48,4 @@ build() {
   chmod 644 $pkgdir/var/lib/os-prober/labels
 }
 
-sha256sums=('c73b7790c3b54bca664dde3aa49412c3fb244c7d9478cfa8316144ceb4c4e0a1')
+md5sums=('80075af089055c415654484a8ca6b5e8')
