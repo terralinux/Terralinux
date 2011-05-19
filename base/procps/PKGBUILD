@@ -53,8 +53,9 @@ package() {
   install -d "${pkgdir}/usr/include/proc"
   install -m644 proc/*.h "${pkgdir}/usr/include/proc"
 }
+
 md5sums=('9532714b6846013ca9898984ba4cd7e0'
-         '55beda2aae2b79f45e5d82993be54c60'
+         '0948ac11925b28ea913cda6ac2be0241'
          '111f33c3fd8fab2fed36c279065fefff'
          '81ac7fb50fcdb03e57055c7b763bb275'
          'cb020bfd46689908b56bf3fc5a55828a'
