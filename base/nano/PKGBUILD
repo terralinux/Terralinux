@@ -1,0 +1,32 @@
+# $Id: PKGBUILD 101599 2010-11-29 19:19:03Z andyrtr $
+# Maintainer: Martin Lee <hellnest@terralinux.org>
+
+pkgname=nano
+pkgver=2.3.1
+pkgrel=1
+pkgdesc="Pico editor clone with enhancements"
+arch=('i686' 'x86_64')
+license=('GPL')
+url="http://www.nano-editor.org"
+groups=('base')
+depends=('ncurses' 'sh')
+backup=('etc/nanorc')
+install=nano.install
+source=(http://www.nano-editor.org/dist/v2.3/${pkgname}-${pkgver}.tar.gz)
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr \
+    --sysconfdir=/etc \
+    --enable-color \
+    --enable-nanorc \
+    --enable-multibuffer \
+    --disable-wrapping-as-root
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  install -DTm644 ${srcdir}/${pkgname}-${pkgver}/doc/nanorc.sample ${pkgdir}/etc/nanorc
+}
