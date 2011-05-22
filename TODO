@@ -3,3 +3,5 @@
 - Rebuild XFCE against haredened tool-chain
 - Downgrade vala to meet the depedency requirement
 - Re-organize group-package and repository
+- Modified systemd pkg to avoid overwrite old / modified services file
+- re-build libindicate & re-build gtk2 + glib2 package
