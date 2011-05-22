@@ -1,0 +1,5 @@
+# Things To Be Done
+
+- Rebuild XFCE against haredened tool-chain
+- Downgrade vala to meet the depedency requirement
+- Re-organize group-package and repository
