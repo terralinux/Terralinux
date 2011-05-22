@@ -4,9 +4,9 @@
 pkgbase=kernel26
 pkgname=('kernel26' 'kernel26-headers' 'kernel26-docs')
 _kernelname=${pkgname#kernel26}
-pkgver=2.6.38.6
-pkgrel=3
-_commit=a3c54ec
+pkgver=2.6.38.7
+pkgrel=1
+_commit=7820806
 makedepends=('xmlto' 'docbook-xsl')
 arch=(i686 x86_64)
 license=('GPL2')
@@ -31,7 +31,7 @@ source=(http://git.zen-kernel.org/zen-stable/snapshot/$_srcname.tar.bz2
         x86-cpufreq-speedstep-dothan-3.patch
         x86-default_poweroff_up_machines.patch
         x86-boot-video-80x25-if-break.patch
-	fix-i915.patch libata-eh-2.6.38.patch intel_ips-produces-constant-load-of-1.patch)
+	      fix-i915.patch intel_ips-produces-constant-load-of-1.patch)
 
 build() {
   msg "Applying Patchest"
@@ -49,7 +49,6 @@ build() {
   patch -Np1 -i $srcdir/x86-default_poweroff_up_machines.patch
   patch -Np1 -i $srcdir/x86-boot-video-80x25-if-break.patch
   patch -Np1 -i $srcdir/fix-i915.patch
-  patch -Np1 -i $srcdir/libata-eh-2.6.38.patch
   patch -Np1 -i $srcdir/intel_ips-produces-constant-load-of-1.patch
 
   if [[ $NOEXTRACT = "0" ]]; then
@@ -279,7 +278,8 @@ find $pkgdir -type d -exec chmod 755 {} \;
 # remove a file already in kernel26 package
 rm -f $pkgdir/usr/src/linux-$_kernver/Documentation/DocBook/Makefile
 }
-md5sums=('207afe5c1993738cda36f76437f14a59'
+
+md5sums=('a98c3059eb0f4e4e1faf2cffb5f4d675'
          'e1eb496d3053992d0a1b56416754dd5c'
          'f34781949fb2bf81fea300d381c61573'
          'd866bcc06672fee17736bd5022f700fe'
@@ -299,5 +299,4 @@ md5sums=('207afe5c1993738cda36f76437f14a59'
          '313fc5df66be499de2458428121adbc4'
          'ef051630d88b10357b7150cf8ba615ac'
          '263725f20c0b9eb9c353040792d644e5'
-         'ff73da50eb3916c4972bc9232bce0c4b'
          'eb077163c7323fac2501c89bb3232db9')
