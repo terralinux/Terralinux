@@ -17,7 +17,7 @@ post_install () {
   echo ">>> http://wiki.archlinux.org/index.php/Mkinitcpio"
   echo ""
   echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
-  /sbin/mkinitcpio -p kernel26${KERNEL_NAME}
+  /sbin/geninit -p kernel26
 }
 
 post_upgrade() {
@@ -27,6 +27,7 @@ post_upgrade() {
   hasgrub2=$?
   pacman -Q lilo &>/dev/null
   haslilo=$?
+  pacman -Q burg &>/dev/null
   # reminder notices
   if [ $haslilo -eq 0 ]; then
     echo ">>>"
@@ -142,6 +143,6 @@ fi
 }
 
 post_remove() {
-  rm -f /boot/kernel26${KERNEL_NAME}.img
-  rm -f /boot/kernel26${KERNEL_NAME}-fallback.img
+  rm -f /boot/initramfs26
+  rm -f /boot/initramfs26-failsafe
 }
