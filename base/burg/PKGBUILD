@@ -17,16 +17,11 @@ options=('!makeflags')
 changelog=burg.Changelog
 provides=(burg)
 backup=('etc/default/burg' 'etc/burg.d/40_custom')
-source=('burg.default' 'arch-burg-detection-folding.patch' '20_memtest86+' 'update-burg')
+source=('burg.default' 'terra.patch' '20_memtest86+' 'update-burg')
 install='burg.install'
 
 _bzrmod=burg
 _bzrtrunk=lp:${_bzrmod}
-
-md5sums=('fe9698d2719ad00fb806c1f2522d94ac'
-         'fa7e08137c8736c0b90375f09beaa101'
-         '990eba4f3cb1808c97c2972de6957a3c'
-         '06dbd97a27ce89edd49a5f974679b012')      
 
 build() {
 cd $srcdir/
@@ -43,7 +38,7 @@ fi
   cp -r "$srcdir/$_bzrmod"{,-build}  
   cd "$srcdir/$_bzrmod-build"
   
-  patch -Np1 < "$srcdir/arch-burg-detection-folding.patch"
+  patch -Np1 < "$srcdir/terra.patch"
   sed -i 's|python|python2|' "${srcdir}/${_bzrmod}-build/autogen.sh"
   
   ./autogen.sh || return 1
@@ -65,3 +60,7 @@ make install DESTDIR=$pkgdir  ||  return 1
   install -Dm755 ${srcdir}/20_memtest86+ ${pkgdir}/etc/burg.d/20_memtest86+
 }
 
+md5sums=('fe9698d2719ad00fb806c1f2522d94ac'
+         '1b3b62d18c62e004b4707f82f8cb5ce9'
+         '990eba4f3cb1808c97c2972de6957a3c'
+         '06dbd97a27ce89edd49a5f974679b012')

@@ -19,7 +19,6 @@ source=(http://git.zen-kernel.org/zen-stable/snapshot/$_srcname.tar.bz2
         config config.x86_64 config.diff config.x86_64.diff
         # standard config files for mkinitcpio ramdisk
         kernel26.preset
-        fix-hibernate-resume-2.6.38.patch
         acpi-CLEVO-M360S-disable_acpi_irq.patch
         net-usb-rndis_host-poll-status-channel-before-control-channel.patch
         ide-pci-sis5513-965.patch
@@ -31,14 +30,13 @@ source=(http://git.zen-kernel.org/zen-stable/snapshot/$_srcname.tar.bz2
         x86-cpufreq-speedstep-dothan-3.patch
         x86-default_poweroff_up_machines.patch
         x86-boot-video-80x25-if-break.patch
-	      fix-i915.patch intel_ips-produces-constant-load-of-1.patch)
+	      fix-i915.patch)
 
 build() {
   msg "Applying Patchest"
   cd "$srcdir/$_srcname"
   patch -Np1 -i $srcdir/net-usb-rndis_host-poll-status-channel-before-control-channel.patch
   patch -Np1 -i $srcdir/acpi-CLEVO-M360S-disable_acpi_irq.patch
-  patch -Np1 -i $srcdir/fix-hibernate-resume-2.6.38.patch
   patch -Np1 -i $srcdir/ide-pci-sis5513-965.patch
   patch -Np1 -i $srcdir/acpi-video-add-blacklist-to-use-vendor-driver.patch
   patch -Np1 -i $srcdir/char-agp-intel-new-Q57-id.patch
@@ -49,14 +47,13 @@ build() {
   patch -Np1 -i $srcdir/x86-default_poweroff_up_machines.patch
   patch -Np1 -i $srcdir/x86-boot-video-80x25-if-break.patch
   patch -Np1 -i $srcdir/fix-i915.patch
-  patch -Np1 -i $srcdir/intel_ips-produces-constant-load-of-1.patch
-
+  
   if [[ $NOEXTRACT = "0" ]]; then
      msg "Replacing penguins with Terra"
      #bzip2 -dk ${startdir}/logo_linux_clut224.ppm.bz2
      #tar -xf $srcdir/logo_linux_*.bz2
      #mv -f ${startdir}/logo_linux_*.p?m drivers/video/logo/
-     mv -f ${srcdir}/logo_linux_*.p?m drivers/video/logo/
+     mv -f ${startdir}/logo_linux_*.p?m drivers/video/logo/
   fi
   if [ "$CARCH" = "x86_64" ]; then
     cat  ../config.x86_64 >./.config
@@ -74,8 +71,8 @@ build() {
   make prepare
   # load configuration
   # Configure the kernel. Replace the line below with one of your choice.
-  make menuconfig # CLI menu for configuration
-  #make nconfig # new CLI menu for configuration
+  #make menuconfig # CLI menu for configuration
+  make nconfig # new CLI menu for configuration
   #make xconfig # X-based configuration
   #make oldconfig # using old config from previous kernel version
   # ... or manually edit .config
@@ -278,25 +275,3 @@ find $pkgdir -type d -exec chmod 755 {} \;
 # remove a file already in kernel26 package
 rm -f $pkgdir/usr/src/linux-$_kernver/Documentation/DocBook/Makefile
 }
-
-md5sums=('a98c3059eb0f4e4e1faf2cffb5f4d675'
-         'e1eb496d3053992d0a1b56416754dd5c'
-         'f34781949fb2bf81fea300d381c61573'
-         'd866bcc06672fee17736bd5022f700fe'
-         '2e179e81086102c8d3ca82e404f73030'
-         '365359cfe3680191210ddf0e26cf74a6'
-         'ceb38003807a5aa1a00c8d4b9f028893'
-         '94615015098a60d85ad858b788c27edc'
-         'b348c49d8f59516430e5fdb28a7e5f2a'
-         'f1b5a2dd53d76d75e721ea7262dfd497'
-         '52aea4b8903e1539bbacf61c6d81a928'
-         '88efa69dd3758a1a7fbbaa88446435fd'
-         '8d4927e91e4147b304131007d8494050'
-         '643f8bf667660319904d8c70986270da'
-         '741b7e549c92871c5e4572aee62c89db'
-         'e5e3f1380c22dce48a167818529aba64'
-         '177beae406136596c79946d934bb4d70'
-         '313fc5df66be499de2458428121adbc4'
-         'ef051630d88b10357b7150cf8ba615ac'
-         '263725f20c0b9eb9c353040792d644e5'
-         'eb077163c7323fac2501c89bb3232db9')
