@@ -275,6 +275,7 @@ find $pkgdir -type d -exec chmod 755 {} \;
 # remove a file already in kernel26 package
 rm -f $pkgdir/usr/src/linux-$_kernver/Documentation/DocBook/Makefile
 }
+
 md5sums=('a98c3059eb0f4e4e1faf2cffb5f4d675'
          'e1eb496d3053992d0a1b56416754dd5c'
          'f34781949fb2bf81fea300d381c61573'
