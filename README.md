@@ -1,3 +1,3 @@
-Terralinux packages - Public Repository
+# Terralinux - Public Repository ( GIT TREE ) #
 
-(c) GPL v3 (c)
+# vim: ft=mkd
