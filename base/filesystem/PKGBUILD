@@ -2,7 +2,7 @@
 # Maintainer: Martin Lee <hellnest@terralinux.org>
 
 pkgname=filesystem
-pkgver=2011.05
+pkgver=2011.06
 pkgrel=1
 pkgdesc='Base filesystem'
 arch=('any')
@@ -35,7 +35,7 @@ package() {
 
 	# setup /etc
 	install -d ${pkgdir}/etc/{ld.so.conf.d,skel,profile.d}
-	for f in fstab group host.conf hosts issue ld.so.conf motd nsswitch.conf passwd resolv.conf securetty shells profile; do
+	for f in fstab group host.conf hosts issue ld.so.conf motd nsswitch.conf passwd resolv.conf securetty shells profile terra-release; do
 		install -m644 ${srcdir}/${f} ${pkgdir}/etc/
 	done
 	for f in gshadow shadow crypttab; do
@@ -75,6 +75,7 @@ package() {
 	done
 	ln -s ../man ${pkgdir}/usr/local/share/man
 }
+
 md5sums=('772fe869b921698cc3e6fde73c4ac85a'
          '999896da826946ed120399276ed26a2b'
          '13753e4e0964f3652b0cc60a28528bdf'
@@ -90,6 +91,6 @@ md5sums=('772fe869b921698cc3e6fde73c4ac85a'
          '6f48288b6fcaf0065fcb7b0e525413e0'
          'f86cbba0ebb954079797c15d5578d437'
          'd2dc4e39dbdea75b107f91789e3274ab'
-         'f3b6ae7db8adffaaa4bffc6099dcbd50'
+         'a9b4ece00f127836e861567eff5203a4'
          '8098ffd9fbf890468d3198277596b85a'
          'cdd1e2cdb0d72c00b2a0887ccfd73f2c')

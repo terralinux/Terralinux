@@ -1,5 +1,6 @@
 # $Id: PKGBUILD 91145 2010-09-23 11:46:24Z allan $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# Maintainer: Allan McRae <allan@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgname=autoconf
 pkgver=2.68

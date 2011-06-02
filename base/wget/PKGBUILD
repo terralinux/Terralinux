@@ -1,9 +1,10 @@
 # $Id: PKGBUILD 122950 2011-05-07 12:59:07Z allan $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# Maintainer: Allan McRae <allan@archlinux.org>
+# Contributor: Judd Vinet <jvinet@zeroflux.org>
 
 pkgname=wget
 pkgver=1.12
-pkgrel=1
+pkgrel=7
 pkgdesc="A network utility to retrieve files from the Web"
 arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/wget/wget.html"

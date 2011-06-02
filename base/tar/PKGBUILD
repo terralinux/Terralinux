@@ -1,5 +1,6 @@
 # $Id: PKGBUILD 114404 2011-03-13 10:37:30Z allan $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# Maintainer: Allan McRae <allan@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgname=tar
 pkgver=1.26

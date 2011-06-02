@@ -1,5 +1,6 @@
-# $Id: acpi - martin $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# $Id: PKGBUILD 107523 2011-01-26 15:33:37Z thomas $
+# Contributor: Judd Vinet <jvinet@zeroflux.org>
+# Maintainer: Thayer Williams <thayer@archlinux.org>
 
 pkgname=acpi
 pkgver=1.5

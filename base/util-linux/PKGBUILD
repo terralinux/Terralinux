@@ -1,9 +1,10 @@
 # $Id: PKGBUILD 123897 2011-05-14 09:14:06Z tpowa $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# Maintainer:
+# Contributor: judd <jvinet@zeroflux.org>
 
 pkgname=util-linux
 pkgver=2.19.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Miscellaneous system utilities for Linux"
 url="http://userweb.kernel.org/~kzak/util-linux-ng/"
 arch=('i686' 'x86_64')
@@ -26,13 +27,7 @@ build() {
   patch -Np1 -i ../mount-segfault-2.19.1.patch
   # hardware clock
   sed -e 's%etc/adjtime%var/lib/hwclock/adjtime%' -i hwclock/hwclock.c
-  ./configure \
-    --enable-arch \
-    --enable-write \
-    --enable-raw \
-    --disable-wall \
-    --enable-partx \
-    --enable-libmount-mount
+  ./configure --enable-arch --enable-write --enable-raw --disable-wall --enable-partx
   make
 }
 
