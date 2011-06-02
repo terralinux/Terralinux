@@ -1,11 +1,11 @@
-# $Id: PKGBUILD 116973 2011-03-27 06:05:36Z allan $
-# Maintainer: Allan McRae <allan@archlinux.org>
+# $Id: PKGBUILD lee $
+# Maintainer: Martin Lee <hellnest@terralinux.org
 
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
 
 pkgname=linux-api-headers
-pkgver=2.6.38.1
-_basever=2.6.38
+pkgver=2.6.38.7
+_zencommit=7820806
 pkgrel=1
 pkgdesc="Kernel headers sanitized for use in userspace"
 arch=('i686' 'x86_64')
@@ -14,21 +14,18 @@ license=('GPL2')
 provides=("kernel-headers=${pkgver}")
 conflicts=('kernel-headers')
 replaces=('kernel-headers')
-source=(http://www.kernel.org/pub/linux/kernel/v2.6/linux-${_basever}.tar.bz2
-	http://www.kernel.org/pub/linux/kernel/v2.6/patch-${pkgver}.bz2)
-md5sums=('7d471477bfa67546f902da62227fa976'
-         'bd2be4d0465345e4e9355d6773f5f6fe')
+_srcname=zen-stable-$_zencommit
+source=(http://git.zen-kernel.org/zen-stable/snapshot/$_srcname.tar.bz2)
 
 build() {
-  cd ${srcdir}/linux-${_basever}
-  [[ $pkgver != $_basever ]] && patch -Np1 -i ${srcdir}/patch-${pkgver}
-
+  cd ${srcdir}/${_srcname}
+  
   make mrproper
   make headers_check
 }
 
 package() {
-  cd ${srcdir}/linux-${_basever}
+  cd ${srcdir}/${_srcname}
   make INSTALL_HDR_PATH=${pkgdir}/usr headers_install
 
   # use headers from libdrm
@@ -37,3 +34,4 @@ package() {
   # clean-up unnecessary files generated during install
   find ${pkgdir} -name .install -or -name ..install.cmd | xargs rm -f
 }
+md5sums=('a98c3059eb0f4e4e1faf2cffb5f4d675')

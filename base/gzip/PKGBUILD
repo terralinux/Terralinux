@@ -1,5 +1,6 @@
 # $Id: PKGBUILD 100035 2010-11-20 01:15:49Z stephane $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# Maintainer: Allan McRae <allan@archlinux.org>
+# Contributor: judd <jvinet@zeroflux.org>
 
 pkgname=gzip
 pkgver=1.4

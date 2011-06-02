@@ -1,5 +1,5 @@
 # $Id: PKGBUILD 121182 2011-04-29 06:58:28Z andyrtr $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# Maintainer: Andreas Radke <andyrtr@archlinux.org>
 
 pkgname=tzdata
 pkgver=2011g

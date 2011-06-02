@@ -1,5 +1,5 @@
 # $Id: PKGBUILD 119094 2011-04-10 21:37:04Z allan $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# Maintainer: Allan McRae <allan@archlinux.org>
 
 pkgname=cloog
 pkgver=0.16.2

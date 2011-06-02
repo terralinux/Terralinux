@@ -1,12 +1,12 @@
-# $Id: Glibc - martin $
-# Maintainer: Martin Lee <hellnest@terralinux.org.org>
+# $Id: PKGBUILD 116984 2011-03-27 06:35:25Z allan $
+# Maintainer: Martin Lee <hellnest@terralinux.org>
 
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
 # NOTE: valgrind requires rebuilt with each new glibc version
 
 pkgname=glibc
 pkgver=2.13
-pkgrel=1
+pkgrel=5
 _glibcdate=20110117
 pkgdesc="GNU C Library"
 arch=('i686' 'x86_64')

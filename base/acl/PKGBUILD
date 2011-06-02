@@ -1,5 +1,5 @@
-# $Id$
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# $Id: PKGBUILD 123916 2011-05-14 10:31:07Z thomas $
+# Maintainer: Thomas Bächler <thomas@archlinux.org>
 pkgname=acl
 pkgver=2.2.51
 pkgrel=1
