@@ -1,9 +1,10 @@
-# $Id: PKGBUILD 120920 2011-04-27 11:05:23Z allan $
-# Maintainer: Martin Lee <hellnest@terralinux.org>
+# $Id: PKGBUILD 126199 2011-06-02 14:37:57Z bisson $
+# Maintainer: Allan McRae <allan@archlinux.org>
+# Contributor: judd <jvinet@zeroflux.org>
 
 pkgname=coreutils
 pkgver=8.12
-pkgrel=1
+pkgrel=2
 pkgdesc="The basic file, shell and text manipulation utilities of the GNU operating system"
 arch=('i686' 'x86_64')
 license=('GPL3')
@@ -34,8 +35,8 @@ build() {
 
   autoreconf -v
   ./configure --prefix=/usr \
-              --enable-install-program=su \
-              --enable-no-install-program=groups,hostname,kill,uptime \
+              --enable-install-program=su,hostname \
+              --enable-no-install-program=groups,kill,uptime \
               --enable-pam
   make
 }
@@ -53,8 +54,8 @@ package() {
   install -dm755 ${pkgdir}/{bin,usr/sbin}
   
   # binaries required by FHS
-  _fhs="cat chgrp chmod chown cp date dd df echo false ln ls \
-        mkdir mknod mv pwd rm rmdir stty su sync true uname"
+  _fhs="cat chgrp chmod chown cp date dd df echo false hostname \
+        ln ls mkdir mknod mv pwd rm rmdir stty su sync true uname"
   mv ${_fhs} ${pkgdir}/bin
 
   # binaries required by various Arch scripts

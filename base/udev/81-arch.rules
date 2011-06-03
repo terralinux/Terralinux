@@ -19,12 +19,6 @@
 # global stuff
 #
 
-
-#####################################
-# Additional Archlinux
-# Permissions and Symlinks - begin
-#####################################
-
 # permission for sg devices
 KERNEL=="sg[0-9]*", ATTRS{type}!="3|6", GROUP="disk", MODE="0660"
 
