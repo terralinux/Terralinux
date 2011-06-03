@@ -1,8 +1,9 @@
-# Contributor: Martin Lee <hellnest@terralinux.org>
+# Contributor: Kaiting Chen <kaiting.chen@kiwilight.com>
+# Maintainer: Gaetan Bisson <bisson@archlinux.org>
 
 pkgname='cronie'
 pkgver=1.4.7
-pkgrel=1
+pkgrel=8
 pkgdesc='Daemon that runs specified programs at scheduled times and related tools'
 url='https://fedorahosted.org/cronie/'
 license=('custom:BSD')
