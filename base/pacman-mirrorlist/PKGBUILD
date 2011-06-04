@@ -1,0 +1,32 @@
+# $Id:$
+# Maintainer: Martin Lee <hellnest@terralinux.org>
+
+pkgname=pacman-mirrorlist
+pkgver=20110324
+pkgrel=1
+pkgdesc="Terralinux mirror list for use by pacman"
+arch=('any')
+url="http://www.archlinux.org/mirrorlist/"
+license=('GPL')
+backup=(etc/pacman.d/mirrorlist)
+source=(mirrorlist)
+
+# keep an upgrade path for older installations
+PKGEXT='.pkg.tar.gz'
+
+# NOTE on building this package:
+# * Go to the trunk/ directory
+# * Run bash -c ". PKGBUILD; updatelist"
+# * Update the checksums, update pkgver
+# * Build the package
+
+updatelist() {
+  wget -O mirrorlist http://archive.terralnux.org/mirrorlist/
+}
+
+build() {
+  mkdir -p $pkgdir/etc/pacman.d
+  install -m644 $srcdir/mirrorlist $pkgdir/etc/pacman.d/
+}
+
+md5sums=('e2e826067ed092b6c3be73406cafb4c8')

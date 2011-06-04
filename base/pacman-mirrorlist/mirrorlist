@@ -1,0 +1,6 @@
+##
+## Terralinux Repository Mirror
+## Generated on 2011-06
+##
+
+Server = http://archive.terralinux.org/repository/$repo/$arch
