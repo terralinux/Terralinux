@@ -1,15 +1,17 @@
-# - presets can be disabled by prefixing with !
-# - each preset must have, at minimum, an image name defined
-# - extra options and config parameters are optional
-# - kver can be specified as a path to a kernel image or a version
-#
+# mkinitcpio preset file for kernel26-zen
 
-presets=(default failsafe)
-ALL_kver=/boot/vmlinuz26
-ALL_config=/etc/geninit.conf
+########################################
+# DO NOT EDIT THIS LINE:
+source /etc/mkinitcpio.d/kernel26.kver
+########################################
+ALL_config="/etc/mkinitcpio.conf"
 
-default_image=/boot/initramfs-26
+PRESETS=('default' 'fallback')
 
-failsafe_image=/boot/initramfs-26-failsafe
-failsafe_options="-S autodetect"
-failsafe_config=/etc/geninit.conf
+#default_config="/etc/mkinitcpio.conf"
+default_image="/boot/kernel26.img"
+#default_options=""
+
+#fallback_config="/etc/mkinitcpio.conf"
+fallback_image="/boot/kernel26-fallback.img" 
+fallback_options="-S autodetect"

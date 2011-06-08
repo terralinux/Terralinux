@@ -4,9 +4,9 @@
 pkgbase=kernel26
 pkgname=('kernel26' 'kernel26-headers' 'kernel26-docs')
 _kernelname=${pkgname#kernel26}
-pkgver=2.6.38.7
+pkgver=2.6.39.1
 pkgrel=1
-_commit=7820806
+_commit=6d6d304
 makedepends=('xmlto' 'docbook-xsl')
 arch=(i686 x86_64)
 license=('GPL2')
@@ -14,8 +14,6 @@ url="http://www.kernel.org"
 options=(!strip)
 _srcname=zen-stable-$_commit
 source=(http://git.zen-kernel.org/zen-stable/snapshot/$_srcname.tar.bz2
-        # the main kernel config files
-	      logo_linux_clut224.ppm # Terralinux Logo
         config config.x86_64 config.diff config.x86_64.diff
         # standard config files for mkinitcpio ramdisk
         kernel26.preset
@@ -47,27 +45,21 @@ build() {
   patch -Np1 -i $srcdir/x86-default_poweroff_up_machines.patch
   patch -Np1 -i $srcdir/x86-boot-video-80x25-if-break.patch
   patch -Np1 -i $srcdir/fix-i915.patch
-  
-  if [[ $NOEXTRACT = "0" ]]; then
-     msg "Replacing penguins with Terra"
-     #bzip2 -dk ${startdir}/logo_linux_clut224.ppm.bz2
-     #tar -xf $srcdir/logo_linux_*.bz2
-     #mv -f ${startdir}/logo_linux_*.p?m drivers/video/logo/
-     mv -f ${startdir}/logo_linux_*.p?m drivers/video/logo/
-  fi
+
+cd "$srcdir/$_srcname"
   if [ "$CARCH" = "x86_64" ]; then
-    cat  ../config.x86_64 >./.config
+    cat ../config.x86_64 >./.config
     patch .config ../config.x86_64.diff
   else
     cat ../config >./.config
     patch .config ../config.diff
   fi
-    if [ "${_kernelname}" != "" ]; then
+  if [ "${_kernelname}" != "" ]; then
     sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
     sed -i "s|CONFIG_LOCALVERSION_AUTO=.*|CONFIG_LOCALVERSION=n|" ./.config
   fi
   sed -i 's|EXTRAVERSION =.*|EXTRAVERSION =|' Makefile
-  # get kernel version
+  # get kernel version  
   make prepare
   # load configuration
   # Configure the kernel. Replace the line below with one of your choice.
@@ -76,7 +68,7 @@ build() {
   #make xconfig # X-based configuration
   #make oldconfig # using old config from previous kernel version
   # ... or manually edit .config
-
+  
   # rewrite configuration
   yes "" | make config >/dev/null
 
@@ -96,8 +88,9 @@ build() {
   # build!
   make ${MAKEFLAGS} LOCALVERSION= bzImage modules
 }
+
 package_kernel26() {
-  pkgdesc="Terralinux Kernel, based on ZEN"
+  pkgdesc="The Linux ZEN Kernel and modules"
   backup=(etc/mkinitcpio.d/${pkgname}.preset)
   depends=('coreutils' 'linux-firmware' 'module-init-tools>=3.12-2' 'mkinitcpio>=0.6.8-2')
   # pwc, ieee80211 and hostap-driver26 modules are included in kernel26 now
@@ -143,7 +136,7 @@ package_kernel26() {
 }
 
 package_kernel26-headers() {
-  pkgdesc="Header files and scripts for building modules"
+  pkgdesc="Header files and scripts for building modules for kernel26-zen"
   mkdir -p ${pkgdir}/lib/modules/${_kernver}
   cd ${pkgdir}/lib/modules/${_kernver}
   ln -sf ../../../usr/src/linux-${_kernver} build
@@ -156,7 +149,8 @@ package_kernel26-headers() {
     ${pkgdir}/usr/src/linux-${_kernver}/.config
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/include
 
-  for i in acpi asm-generic config generated linux math-emu media net pcmcia scsi sound trace video xen; do
+  for i in acpi asm-generic config crypto drm generated linux math-emu \
+    media net pcmcia scsi sound trace video xen; do
     cp -a include/$i ${pkgdir}/usr/src/linux-${_kernver}/include/
   done
 
@@ -186,8 +180,6 @@ package_kernel26-headers() {
    mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/video/$i
    cp -a drivers/media/video/$i/*.h ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/video/$i
   done
-  mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/drivers/staging/usbvideo/
-  cp -a drivers/staging/usbvideo/*.h ${pkgdir}/usr/src/linux-${_kernver}/drivers/staging/usbvideo/
   # add docbook makefile
   install -D -m644 Documentation/DocBook/Makefile \
     ${pkgdir}/usr/src/linux-${_kernver}/Documentation/DocBook/Makefile
@@ -216,7 +208,7 @@ package_kernel26-headers() {
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/dvb/frontends/
   cp drivers/media/dvb/frontends/lgdt330x.h ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/dvb/frontends/
   cp drivers/media/video/msp3400-driver.h ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/dvb/frontends/
-  # add dvb headers
+  # add dvb headers  
   # in reference to:
   # http://bugs.archlinux.org/task/20402
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/drivers/media/dvb/dvb-usb
@@ -229,20 +221,8 @@ package_kernel26-headers() {
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/fs/xfs
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/mm
   cp fs/xfs/xfs_sb.h ${pkgdir}/usr/src/linux-${_kernver}/fs/xfs/xfs_sb.h
-  # add headers vor virtualbox
-  # in reference to:
-  # http://bugs.archlinux.org/task/14568
-  cp -a include/drm $pkgdir/usr/src/linux-${_kernver}/include/
-  # add headers for broadcom wl
-  # in reference to:
-  # http://bugs.archlinux.org/task/14568
-  cp -a include/trace $pkgdir/usr/src/linux-${_kernver}/include/
-  # add headers for crypto modules
-  # in reference to:
-  # http://bugs.archlinux.org/task/22081
-  cp -a include/crypto $pkgdir/usr/src/linux-${_kernver}/include/
   # copy in Kconfig files
-  for i in `find . -name "Kconfig*"`; do
+  for i in `find . -name "Kconfig*"`; do 
     mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/`echo $i | sed 's|/Kconfig.*||'`
     cp $i ${pkgdir}/usr/src/linux-${_kernver}/$i
   done
@@ -258,14 +238,14 @@ package_kernel26-headers() {
     /usr/bin/strip $STRIP_STATIC "$binary";;
     *application/x-executable*) # Binaries
     /usr/bin/strip $STRIP_BINARIES "$binary";;
-    esac
-  done
+    esac 
+  done 
   # remove unneeded architectures
   rm -rf ${pkgdir}/usr/src/linux-${_kernver}/arch/{alpha,arm,arm26,avr32,blackfin,cris,frv,h8300,ia64,m32r,m68k,m68knommu,mips,microblaze,mn10300,parisc,powerpc,ppc,s390,sh,sh64,sparc,sparc64,um,v850,xtensa}
 }
 
 package_kernel26-docs() {
-pkgdesc="Kernel hackers manual"
+pkgdesc="Kernel hackers manual - HTML documentation that comes with the Linux ZEN kernel."
 
 cd ${srcdir}/$_srcname
 mkdir -p $pkgdir/usr/src/linux-$_kernver
@@ -276,22 +256,21 @@ find $pkgdir -type d -exec chmod 755 {} \;
 rm -f $pkgdir/usr/src/linux-$_kernver/Documentation/DocBook/Makefile
 }
 
-md5sums=('a98c3059eb0f4e4e1faf2cffb5f4d675'
-         'e1eb496d3053992d0a1b56416754dd5c'
-         'f34781949fb2bf81fea300d381c61573'
-         'd866bcc06672fee17736bd5022f700fe'
-         '2e179e81086102c8d3ca82e404f73030'
-         '365359cfe3680191210ddf0e26cf74a6'
-         'b032f637fc775daf39a858120c08f1a2'
-         'b348c49d8f59516430e5fdb28a7e5f2a'
-         'f1b5a2dd53d76d75e721ea7262dfd497'
-         '52aea4b8903e1539bbacf61c6d81a928'
-         '88efa69dd3758a1a7fbbaa88446435fd'
-         '8d4927e91e4147b304131007d8494050'
-         '643f8bf667660319904d8c70986270da'
-         '741b7e549c92871c5e4572aee62c89db'
-         'e5e3f1380c22dce48a167818529aba64'
-         '177beae406136596c79946d934bb4d70'
-         '313fc5df66be499de2458428121adbc4'
-         'ef051630d88b10357b7150cf8ba615ac'
-         '263725f20c0b9eb9c353040792d644e5')
+sha256sums=('8eaa158004ba30bd02b345455447f1c625de90e8389c3f296f8e1b1d5c73334a'
+            '591b4964a2f405cbfea46e21af2c85a715cce5230ae1ec773ca2347e2fd6d6f6'
+            '43bc6cdcd7852064871d82d6d466b4d667e7587131a6a050e29a39ab71602614'
+            'da0aaa4b8cbc871f654d7968013e066425fe94f8de4cf18518bfd7a5f8237851'
+            '4eceb0e7eb255cb833ab86a5e46afdd2de25b6ea3c5c7de5173dd1a51060c31d'
+            'e4c2e9f3e719107bb8c78ac53d3ac8696e0ce78f9385cac0bcccd9e08e92d772'
+            'ea48d6d9fa929c69494fb913e51c1c1ef51cfdd385eb4bc28ce43d008d53916c'
+            'f776c2c7465f77c6fb5d267e27c176464604de46b759b9a8a74e8b67e4043b1c'
+            'dbc02578a7a8e77a55b9fdd8bcfb8f95aebb2e94dcfa1e5a8d41ddf0fc273fa3'
+            'e8fa82a7b8bb58d36b587705343758d83a569a38aec9c14d36e374240623aa91'
+            '9dda3d777eb149637d8a7f415fc33dce54377a6d0293ad031b257fb06e2d981f'
+            '013d5db1b9cacf1e724ecf4094e7484f9032e4c0e0bcb0b65eb0ac2fd49b663b'
+            'b81a77512b350a0e4660ef0cf4a625fd42e974e883067c6681dc3f4320ac2ec7'
+            '4ffbade2827af61cc6f0b0f384df63d810bc06b7c5bc97720c38ffdd21c16d66'
+            '9958881ca860bef44320b26322aa17e31abfd5145e815223ecfa703e3550c346'
+            '459f656cc7e1e45684d9f0f122d21c6cb68901dcdcbe1ab3b8124108244e2a80'
+            '89b0cfef95ca2b5b29cab57a2fad3f2ed36adcfe610280f5c1078b5911946125'
+            '9ccadbe3eb30bb283af3eb869c3a4bdb764628854811cc616a2e02e9ef398705')

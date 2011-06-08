@@ -2,7 +2,7 @@
 # arg 2:  the old package version
 
 KERNEL_NAME=
-KERNEL_VERSION=2.6.38-TERRA
+KERNEL_VERSION=2.6.39-TERRA
 
 post_install () {
   # updating module dependencies

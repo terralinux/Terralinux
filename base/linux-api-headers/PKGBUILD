@@ -4,8 +4,8 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
 
 pkgname=linux-api-headers
-pkgver=2.6.38.7
-_zencommit=7820806
+pkgver=2.6.39.1
+_zencommit=6d6d304
 pkgrel=1
 pkgdesc="Kernel headers sanitized for use in userspace"
 arch=('i686' 'x86_64')
@@ -34,4 +34,5 @@ package() {
   # clean-up unnecessary files generated during install
   find ${pkgdir} -name .install -or -name ..install.cmd | xargs rm -f
 }
-md5sums=('a98c3059eb0f4e4e1faf2cffb5f4d675')
+
+sha256sums=('8eaa158004ba30bd02b345455447f1c625de90e8389c3f296f8e1b1d5c73334a')
