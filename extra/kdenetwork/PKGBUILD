@@ -112,3 +112,5 @@ package_kdenetwork-krfb() {
 	cd $srcdir/build/doc/krfb
 	make DESTDIR=$pkgdir install
 }
+
+sha1sums=('6f140dca442be815eda4fb79d51efd9e4588a1f1')

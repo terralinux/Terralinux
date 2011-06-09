@@ -241,3 +241,5 @@ package_kdesdk-umbrello() {
 	cd $srcdir/build/doc/umbrello
 	make DESTDIR=$pkgdir install
 }
+sha1sums=('6faecbd828fda6cf0aced642287d982d3541d746'
+          'd05ca0231869c484fd3861955d960a60aff7dcfb')

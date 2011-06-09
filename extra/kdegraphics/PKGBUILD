@@ -139,3 +139,4 @@ package_kdegraphics-okular() {
 	cd $srcdir/build/doc/okular
 	make DESTDIR=$pkgdir install
 }
+sha1sums=('c16dc9c55e7459418fa9887aa532ea0a269e7179')

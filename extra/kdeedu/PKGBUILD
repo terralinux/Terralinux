@@ -278,3 +278,4 @@ package_kdeedu-step() {
 	cd $srcdir/build/doc/step
 	make DESTDIR=$pkgdir install
 }
+

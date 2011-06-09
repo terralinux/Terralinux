@@ -65,3 +65,4 @@ package_kdewebdev-kommander() {
 	cd $srcdir/build/kommander
 	make DESTDIR=$pkgdir install
 }
+sha1sums=('39e72fbaf76ee1c685321c8c3a767c38e63bc2a9')

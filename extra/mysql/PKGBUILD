@@ -128,3 +128,8 @@ package_mysql(){
 
   install -dm700 "${pkgdir}"/var/lib/mysql
 }
+
+
+md5sums=('f0e519e90ee7c00fceb0730edf859d7b'
+         '2234207625baa29b2ff7d7b4f088abce'
+         '1c949c0dbea5206af0db14942d9927b6')

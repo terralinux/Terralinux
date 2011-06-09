@@ -178,3 +178,5 @@ package_kdeutils-sweeper() {
 	cd $srcdir/build/sweeper
 	make DESTDIR=$pkgdir install
 }
+sha1sums=('1aa735c03689ef49b949278ee31d0d8e8536b7d6')
+sha1sums=('1aa735c03689ef49b949278ee31d0d8e8536b7d6')
