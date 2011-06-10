@@ -601,4 +601,3 @@ package_kdeplasma-addons-wallpapers-weather() {
 	cd $srcdir/build/wallpapers/weather
 	make DESTDIR=$pkgdir install
 }
-sha1sums=('7a43dcfebc0316e681b04d0958d89272620a11b7')

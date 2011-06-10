@@ -236,4 +236,3 @@ package_kdepim-wizards() {
 	cd $srcdir/build/wizards
 	make DESTDIR=$pkgdir install
 }
-sha1sums=('49dd6cc8406b0ef4bb681bfc0de6ad9368b4b5b2')

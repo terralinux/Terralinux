@@ -100,5 +100,3 @@ package_kdeartwork-weatherwallpapers() {
 	cd $srcdir/build/WeatherWallpapers
 	make DESTDIR=$pkgdir install
 }
-
-sha1sums=('084834ac3c654ea24257d9ed407c2384bf5aa110')

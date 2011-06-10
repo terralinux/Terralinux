@@ -30,5 +30,3 @@ package() {
 	cd $srcdir/build
 	make DESTDIR=$pkgdir install
 }
-
-sha1sums=('370b4e98ab9e1f8ba18d36630d5c8bbff8da4883')
