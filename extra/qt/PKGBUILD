@@ -1,10 +1,9 @@
-# $Id: PKGBUILD 82062 2010-06-08 11:58:32Z pierre $
-# Maintainer: Pierre Schmitz <pierre@archlinux.de>
+# Maintainer: Martin Lee <hellnest@terralinux.org>
 
 pkgname=qt
 pkgver=4.7.3
 _pkgver=4.7.3
-pkgrel=3
+pkgrel=4
 pkgdesc='A cross-platform application and UI framework'
 arch=('i686' 'x86_64')
 url='http://qt.nokia.com/'
@@ -19,13 +18,7 @@ options=('!libtool')
 _pkgfqn="qt-everywhere-opensource-src-${_pkgver}"
 source=("ftp://ftp.qt.nokia.com/qt/source/${_pkgfqn}.tar.gz"
         'assistant.desktop' 'designer.desktop' 'linguist.desktop' 'qtconfig.desktop'
-        'appmenu.patch')
-md5sums=('49b96eefb1224cc529af6fe5608654fe'
-         'a445c6917086d80f1cfc1e40cb6b0132'
-         'd457f0a0ad68a3861c3cadefe3b42ded'
-         '668331d9798a0e2b94381efb7be4c513'
-         'c29f2993d6a0f73d756d2fa36e130e1c'
-	 '7ca519c824d67cfae0281ec50af24ad8')
+        'appmenu.patch' 'qtbug-16292.patch')
 
 build() {
 	unset QMAKESPEC
@@ -33,14 +26,20 @@ build() {
 	export PATH=${QT4DIR}/bin:${PATH}
 	export LD_LIBRARY_PATH=${QT4DIR}/lib:${LD_LIBRARY_PATH}
 
-	cd ${srcdir}/${_pkgfqn}
+  # FS#24601
+  export CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"
+
+  cd $srcdir/$_pkgfqn
 
 	# see http://qt.gitorious.org/qt/agateau-qt
 	# apply appmenu patch from Aurelien Gateau
 	patch -Np1 -i ${srcdir}/appmenu.patch
 	cp ${srcdir}/${_pkgfqn}/src/gui/widgets/qabstractmenubarimpl_p.h ${srcdir}/${_pkgfqn}/include/QtGui/private/
 
-	sed -i "s|-O2|$CXXFLAGS|" mkspecs/common/g++.conf
+  # Already fixed upstream
+  patch -p1 -i "${srcdir}"/qtbug-16292.patch
+	
+  sed -i "s|-O2|$CXXFLAGS|" mkspecs/common/g++.conf
 	sed -i "/^QMAKE_RPATH/s| -Wl,-rpath,||g" mkspecs/common/g++.conf
 	sed -i "/^QMAKE_LFLAGS\s/s|+=|+= $LDFLAGS|g" mkspecs/common/g++.conf
 
@@ -62,7 +61,7 @@ build() {
 		-no-phonon-backend \
 		-svg \
 		-webkit \
-    -script \
+		-script \
 		-scripttools \
 		-system-zlib \
 		-system-libtiff \
@@ -87,9 +86,21 @@ build() {
 	make
 }
 
-package() {
-	cd ${srcdir}/${_pkgfqn}
-	make INSTALL_ROOT=${pkgdir} install
+package_qt() {
+    pkgdesc='A cross-platform application and UI framework'
+    depends=('libtiff' 'libpng' 'libmng' 'sqlite3' 'ca-certificates' 'glib2' 'dbus'
+      'fontconfig' 'libgl' 'libsm' 'libxrandr' 'libxv' 'libxi' 'alsa-lib'
+      'xdg-utils' 'hicolor-icon-theme' 'desktop-file-utils')
+    optdepends=('postgresql-libs: PostgreSQL driver'
+	  'libmysqlclient: MySQL driver'
+	  'unixodbc: ODBC driver'
+	  'libxinerama: Xinerama support'
+	  'libxcursor: Xcursor support'
+	  'libxfixes: Xfixes support')
+    install='qt.install'
+	
+    cd $srcdir/$_pkgfqn
+	make INSTALL_ROOT=$pkgdir install
 
 	# install missing icons and desktop files
 	for icon in tools/linguist/linguist/images/icons/linguist-*-32.png ; do
@@ -114,3 +125,27 @@ package() {
 	## Remove file included in qtwebkit package
 	#rm ${pkgdir}/usr/share/qt/mkspecs/modules/qt_webkit_version.pri
 }
+
+package_qt-private-headers(){
+    pkgdesc="Qt private headers for development"
+    depends=("qt=${pkgver}")
+
+    install -d ${pkgdir}/usr/include/{QtCore,QtDeclarative,QtGui,QtScript}
+    install -d ${pkgdir}/usr/src/{corelib,declarative,gui,script}
+
+    for i in QtCore QtDeclarative QtGui QtScript; do
+      cp -r ${srcdir}/$_pkgfqn/include/${i}/private/ \
+        ${pkgdir}/usr/include/${i}/
+    done
+
+    for i in corelib declarative gui script; do
+      cp -r ${srcdir}/$_pkgfqn/src/${i} ${pkgdir}/usr/src/
+    done
+}
+sha256sums=('d02b6fd69d089c01f4a787aa18175d074ccaecf8980a5956e328c2991905937e'
+            '1094300e3d69e55eb69d87cbaac6724f68b0618938c6eb1b0ddd22ba99c7f8a2'
+            '74c2c5d27a1c1ad08ab01122bcf333f75d0a014b4755d3ddd8764c2425f6e320'
+            '1b9ecd839c1a5dfcec87653849287c31bf2f4044300958be802ebb943e896998'
+            '1e5cb7c2f12d4db35d668f01548a2bef131fe92133d76c78170fb74a377d5ef8'
+            '319e7e8f9fe84ea44b737390aca33a358ee005f684a8fa10fe4c6876ec233ebb'
+            '119afe4a1e9a40e984969731f598a4757a091bf03cc590cb09f6fd2c5655bad9')
