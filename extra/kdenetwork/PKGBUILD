@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 121102 2011-04-29 00:28:01Z andrea $
+# $Id: PKGBUILD 126547 2011-06-06 06:35:00Z andrea $
 # Maintainer: Andrea Scarpino <andrea@archlinux.org>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 
@@ -10,7 +10,7 @@ pkgname=('kdenetwork-filesharing'
          'kdenetwork-kppp'
          'kdenetwork-krdc'
          'kdenetwork-krfb')
-pkgver=4.6.3
+pkgver=4.6.4
 pkgrel=1
 arch=('i686' 'x86_64')
 url='http://www.kde.org'
@@ -21,7 +21,7 @@ makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' 'speex' 'ortp' 'libotr'
 	'ppp' 'v4l-utils' 'libidn' 'rdesktop' 'qimageblitz' 'libxdamage' 'libgadu'
 	'telepathy-qt4' 'libktorrent')
 source=("http://download.kde.org/stable/${pkgver}/src/${pkgbase}-${pkgver}.tar.bz2")
-sha1sums=('6f140dca442be815eda4fb79d51efd9e4588a1f1')
+sha1sums=('63bb58a457aed790e109a9dbeab73abb8c7ea1b2')
 
 build() {
     cd ${srcdir}
@@ -33,7 +33,9 @@ build() {
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DMOZPLUGIN_INSTALL_DIR=/usr/lib/mozilla/plugins/ \
         -DWITH_Xmms=OFF \
-		-DWITH_LibMeanwhile=OFF
+        -DWITH_WLM_MEDIASTREAMER=OFF \
+		-DWITH_LibMeanwhile=OFF \
+        -DWITH_msiLBC=OFF
 	make
 }
 

@@ -31,17 +31,18 @@ build() {
 
   cd $srcdir/$_pkgfqn
 
+	# Fixed by upstream probrably
+  patch -p1 -i "${srcdir}"/qtbug-16292.patch
+
 	# see http://qt.gitorious.org/qt/agateau-qt
 	# apply appmenu patch from Aurelien Gateau
 	patch -Np1 -i ${srcdir}/appmenu.patch
 	cp ${srcdir}/${_pkgfqn}/src/gui/widgets/qabstractmenubarimpl_p.h ${srcdir}/${_pkgfqn}/include/QtGui/private/
 
-  # Already fixed upstream
-  patch -p1 -i "${srcdir}"/qtbug-16292.patch
-	
+
   sed -i "s|-O2|$CXXFLAGS|" mkspecs/common/g++.conf
-	sed -i "/^QMAKE_RPATH/s| -Wl,-rpath,||g" mkspecs/common/g++.conf
-	sed -i "/^QMAKE_LFLAGS\s/s|+=|+= $LDFLAGS|g" mkspecs/common/g++.conf
+  sed -i "/^QMAKE_RPATH/s| -Wl,-rpath,||g" mkspecs/common/g++.conf
+  sed -i "/^QMAKE_LFLAGS\s/s|+=|+= $LDFLAGS|g" mkspecs/common/g++.conf
 
 	./configure -confirm-license -opensource \
 		-prefix /usr \
@@ -98,7 +99,7 @@ package_qt() {
 	  'libxcursor: Xcursor support'
 	  'libxfixes: Xfixes support')
     install='qt.install'
-	
+
     cd $srcdir/$_pkgfqn
 	make INSTALL_ROOT=$pkgdir install
 
