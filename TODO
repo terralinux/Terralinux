@@ -1,7 +1,5 @@
 # Things To Be Done
 
-- Rebuild XFCE against haredened tool-chain
-- Downgrade vala to meet the depedency requirement
-- Re-organize group-package and repository
-- Modified systemd pkg to avoid overwrite old / modified services file
-- re-build libindicate & re-build gtk2 + glib2 package
+- Switchback to old booting style ( for compatibility )
+- Drop Python3 Package if it's keep failed to build
+- Re-check the depedecny problem for each package
