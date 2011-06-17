@@ -79,11 +79,3 @@ build() {
 	install -D -m644 "$srcdir/system-release" ${pkgdir}/etc/system-release
 }
 
-md5sums=('916fb026be911d4cf9c51d44bfee0791'
-         '86c85dcf88dfdb6b895f72bdca1babd1'
-         'f742c9cf2b53d7b50dcf4c21203d0d13'
-         'f9418c98f84f948ccc860c08cf4177ed'
-         'f218e7e4c6b27c5c2135a3de076d8b1a'
-         '6b6312a2f12c2b182e24ee91b8590f70'
-         '6a0c440582ca9ddfd29e0b655600644d'
-         '0d6876fb9f1867112efd35f75bbe3918')
