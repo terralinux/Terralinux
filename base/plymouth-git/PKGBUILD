@@ -79,3 +79,11 @@ build() {
 	install -D -m644 "$srcdir/system-release" ${pkgdir}/etc/system-release
 }
 
+sha256sums=('391c7015fc2f91d6ed0bbcee3a2faca35f0d51f495916cf2bdf1d57c909fb9c8'
+            '1a4604d84387e0373c899866c3fd475e0ab2ebd0e58afc7ee69bbd2e631220bc'
+            '9b4ed3792a231a53f4808682cbe76469efac1647f6bb84c8c38e5a5dfaae95b1'
+            '12e387eb0a279f9ec9e7600b65fd2dd068a608f8f651de3ff0e14b694fa9e022'
+            '8ef0ab3ab0028bd1cb7003fc3ac510b275ae08e4191b1388a77d6b3e1af1bf21'
+            '94abcdb4f31e57ead5fef1a39228f313609a12a3c9694f008d02c56368b6c912'
+            'dd0789ba72ef7d88daa278d4ae41139305552ef1a0983a16b5176351ecd4ddf7'
+            '374bef741f22a332a95264ba5166883fc11c4f85fb01bdb121d381f773e4b211')
