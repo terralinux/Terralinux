@@ -1,6 +1,6 @@
 # Maintainer: Martin Lee <hellnest@terralinux.org>
 
-pkgname=plymouth
+pkgname=plymouth-git
 pkgdesc="A Linux boot screen implementation - GIT Version"
 url="http://freedesktop.org/wiki/Software/Plymouth"
 license=('GPL')
@@ -14,12 +14,12 @@ install=plymouth.install
 provides=('plymouth')
 conflicts=('plymouth')
 source=(plymouth.functions
-	plymouth.initcpio_hook
-	plymouth.initcpio_install
-	plymouth-encrypt.initcpio_hook
-	plymouth-encrypt.initcpio_install
-	plymouth-update-initrd.patch
-	terra-logo.png
+	      plymouth.initcpio_hook
+	      plymouth.initcpio_install
+	      plymouth-encrypt.initcpio_hook
+	      plymouth-encrypt.initcpio_install
+	      plymouth-update-initrd.patch
+	      terra-logo.png
         system-release)
 
 _gitroot='git://git.freedesktop.org/git/plymouth'
