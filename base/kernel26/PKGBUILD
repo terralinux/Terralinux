@@ -4,9 +4,9 @@
 pkgbase=kernel26
 pkgname=('kernel26' 'kernel26-headers' 'kernel26-docs')
 _kernelname=${pkgname#kernel26}
-pkgver=2.6.39.1
-pkgrel=3
-_commit=6d6d304
+pkgver=2.6.39.2
+pkgrel=1
+_commit=d111fdb
 makedepends=('xmlto' 'docbook-xsl')
 arch=(i686 x86_64)
 license=('GPL2')
@@ -263,7 +263,7 @@ find $pkgdir -type d -exec chmod 755 {} \;
 rm -f $pkgdir/usr/src/linux-$_kernver/Documentation/DocBook/Makefile
 }
 
-sha256sums=('8eaa158004ba30bd02b345455447f1c625de90e8389c3f296f8e1b1d5c73334a'
+sha256sums=('eb8c19a6cca9fd2e32f211b2ce8715a8190e70b81fa804ae786fa660e4fa7a8d'
             '591b4964a2f405cbfea46e21af2c85a715cce5230ae1ec773ca2347e2fd6d6f6'
             '43bc6cdcd7852064871d82d6d466b4d667e7587131a6a050e29a39ab71602614'
             'a12b211fba525aa6b1ed74efa0faee8bca0dd8921ab42c3f8f5a4d6b9b46664c'
