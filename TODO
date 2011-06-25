@@ -3,3 +3,5 @@
 - Switchback to old booting style ( for compatibility )
 - Drop Python3 Package if it's keep failed to build
 - Re-check the depedecny problem for each package
+- Re-check xorg-* groups
+- Check the xf86-* package also
