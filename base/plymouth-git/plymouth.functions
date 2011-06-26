@@ -33,10 +33,6 @@ stat_fail() {
 }
 
 ply_end(){
-	ply_client quit --retain-splash
-}
-add_hook multi_end ply_end
-
 if [ "$0" == "/etc/rc.shutdown" ]; then
 	XPID=`pidof X`
 	if [ "$XPID" ]; then
@@ -61,4 +57,10 @@ if [ "$0" == "/etc/rc.shutdown" ]; then
 
 	[[ $(ps h $(cat /tmp/plymouthd)) ]] && kill -9 $(cat /tmp/plymouthd)
 
-fi
+fi 
+
+	ply_client quit --retain-splash
+
+}
+add_hook multi_end ply_end
+
