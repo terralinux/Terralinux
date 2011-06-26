@@ -22,12 +22,17 @@ build() {
   ./configure --prefix=/usr \
     --sysconfdir=/etc \
     --enable-lastfm \
-    --enable-jack \
     --enable-pulse \
     --enable-documentation \
+    --enable-mpg123 \
+    --enable-sidplay \
+    --enable-modplug \
+    --enable-vorbis-enconder \
+    --enable-lame-enconder \
+    --enable-cur \ 
     --disable-libwrap \
     --disable-cue \
-    --disable-sidplay 
+    --disable-ipv6 
   make
 }
 
